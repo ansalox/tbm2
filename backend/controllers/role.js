@@ -1,9 +1,6 @@
 import Role from "../models/role.js";
 
 const registerRole = async (req, res) => {
-  if (!req.body.name || !req.body.description)
-    return res.status(400).send({ message: "Incomplete data" });
-
   const schema = new Role({
     name: req.body.name,
     description: req.body.description,
@@ -26,9 +23,6 @@ const roleList = async (req, res) => {
 };
 
 const updateRole = async (req, res) => {
-  if (!req.body.description)
-    return res.status(400).send({ message: "Incomplete data" });
-
   const editedRole = await Role.findByIdAndUpdate(req.body._id, {
     description: req.body.description,
   });

@@ -25,4 +25,10 @@ const getRoleUser = async (req, res, next) => {
   next();
 };
 
-export default { existingRole, doNotChanges, getRoleUser };
+const validData = async (req, res, next) => {
+  return !req.body.name || !req.body.description
+    ? res.status(400).send({ message: "Incomplete data" })
+    : next();
+};
+
+export default { existingRole, doNotChanges, getRoleUser, validData };
