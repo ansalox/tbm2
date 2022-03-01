@@ -4,9 +4,6 @@ import jwt from "../lib/jwt.js";
 import userService from "../services/user.js";
 
 const registerUser = async (req, res) => {
-  if (!req.body.name || !req.body.email || !req.body.password)
-    return res.status(400).send({ message: "Incomplete data" });
-
   let pass = await bcrypt.hassGenerate(req.body.password);
 
   const schema = new User({
@@ -29,43 +26,31 @@ const registerUser = async (req, res) => {
 };
 
 const registerAdminUser = async (req, res) => {
-  if (
-    !req.body.name ||
-    !req.body.email ||
-    !req.body.password ||
-    !req.body.roleId
-  )
+  if (!req.body.name || !req.body.email || !req.body.password || !req.body.role)
     return res.status(400).send({ message: "Incomplete data" });
 
-  const existingUser = await user.findOne({ email: req.body.email });
-  if (existingUser)
-    return res.status(400).send({ message: "The user is already registered" });
+  let pass = await bcrypt.hassGenerate(req.body.password);
 
-  const passHash = await bcrypt.hash(req.body.password, 10);
-
-  const userRegister = new user({
+  const schema = new User({
     name: req.body.name,
     email: req.body.email,
-    password: passHash,
-    roleId: req.body.roleId,
+    password: pass,
+    role: req.body.role,
     dbStatus: true,
   });
 
-  const result = await userRegister.save();
+  const result = await schema.save();
+
   return !result
-    ? res.status(400).send({ message: "Failed to register user" })
+    ? res.status(500).send({ message: "Failed to register user" })
     : res.status(200).send({ result });
 };
 
 const listUsers = async (req, res) => {
-  const userList = await user
-    .find({
-      $and: [
-        { name: new RegExp(req.params["name"], "i") },
-        { dbStatus: "true" },
-      ],
-    })
-    .populate("roleId")
+  const userList = await User.find({
+    $and: [{ name: new RegExp(req.params["name"]) }, { dbStatus: "true" }],
+  })
+    .populate("role")
     .exec();
   return userList.length === 0
     ? res.status(400).send({ message: "Empty users list" })
@@ -73,11 +58,10 @@ const listUsers = async (req, res) => {
 };
 
 const listAllUser = async (req, res) => {
-  const userList = await user
-    .find({
-      $and: [{ name: new RegExp(req.params["name"], "i") }],
-    })
-    .populate("roleId")
+  const userList = await User.find({
+    $and: [{ name: new RegExp(req.params["name"]) }],
+  })
+    .populate("role")
     .exec();
   return userList.length === 0
     ? res.status(400).send({ message: "Empty users list" })
@@ -85,8 +69,7 @@ const listAllUser = async (req, res) => {
 };
 
 const findUser = async (req, res) => {
-  const userfind = await user
-    .findById({ _id: req.params["_id"] })
+  const userfind = await User.findById({ _id: req.params["_id"] })
     .populate("roleId")
     .exec();
   return !userfind
@@ -95,8 +78,7 @@ const findUser = async (req, res) => {
 };
 
 const getUserRole = async (req, res) => {
-  let userRole = await user
-    .findOne({ email: req.params.email })
+  let userRole = await User.findOne({ email: req.params.email })
     .populate("roleId")
     .exec();
   if (!userRole) return res.status(400).send({ message: "No search results" });
@@ -116,7 +98,7 @@ const updateUser = async (req, res) => {
       req.body.password,
       searchUser.password
     );
-    if(passHash) return res.status()
+    if (passHash) return res.status();
     if (!passHash) {
       pass = await bcrypt.hash(req.body.password, 10);
     } else {
@@ -142,8 +124,6 @@ const updateUser = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-  if (!req.params["_id"]) return res.status(400).send("Incomplete data");
-
   const userDeleted = await User.findByIdAndUpdate(req.params["_id"], {
     dbStatus: false,
   });

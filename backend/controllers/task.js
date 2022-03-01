@@ -1,11 +1,8 @@
 import task from "../models/task.js";
 
 const saveTask = async (req, res) => {
-  if (!req.body.name || !req.body.description)
-    return res.status(400).send({ message: "Incomplete data" });
-
   const boardSchema = new task({
-    userId: req.user._id,
+    user: req.user._id,
     name: req.body.name,
     description: req.body.description,
     taskStatus: "to-do",

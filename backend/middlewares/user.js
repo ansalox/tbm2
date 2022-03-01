@@ -7,4 +7,10 @@ const existingUser = async (req, res, next) => {
     : next();
 };
 
-export default { existingUser };
+const validData = async (req, res, next) => {
+  return !req.body.name || !req.body.email || !req.body.password
+    ? res.status(400).send({ message: "Incomplete data" })
+    : next();
+};
+
+export default { existingUser, validData };
