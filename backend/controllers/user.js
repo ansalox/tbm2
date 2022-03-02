@@ -157,11 +157,11 @@ const login = async (req, res) => {
 export default {
   registerUser,
   registerAdminUser,
-  listUsers,
-  listAllUser,
-  findUser,
-  updateUser,
-  deleteUser,
   login,
+  deleteUser,
+  updateUser,
   getUserRole,
+  listAllUser,
+  listUsers,
+  findUser
 };
