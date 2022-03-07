@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import db from "./db/db.js";
+import db from "./config/db.js";
 import dotenv from "dotenv";
 import role from "./routes/role.js";
 import user from "./routes/user.js";
