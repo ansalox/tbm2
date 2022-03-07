@@ -1,4 +1,5 @@
 import Role from "../models/role.js";
+import roleService from "../services/role.js";
 
 const registerRole = async (req, res) => {
   const schema = new Role({
