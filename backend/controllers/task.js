@@ -16,7 +16,7 @@ const saveTask = async (req, res) => {
 };
 
 const listTask = async (req, res) => {
-  const taskList = await task.find({ userId: req.user._id });
+  const taskList = await task.find({ user: req.user._id });
   return taskList.length === 0
     ? res.status(400).send({ message: "You have no assigned tasks" })
     : res.status(200).send({ taskList });
