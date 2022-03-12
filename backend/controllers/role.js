@@ -2,6 +2,10 @@ import Role from "../models/role.js";
 import roleService from "../services/role.js";
 
 const registerRole = async (req, res) => {
+  const existingRole = await roleService.existingRole(req.body);
+  if (existingRole)
+    return res.status(400).send({ message: "The role already exist" });
+
   const schema = new Role({
     name: req.body.name,
     description: req.body.description,

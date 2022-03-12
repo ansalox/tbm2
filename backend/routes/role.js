@@ -8,7 +8,8 @@ import validId from "../middlewares/validId.js";
 
 const router = express.Router();
 
-router.post("/register", auth, admin, validData, role.registerRole);
+// router.post("/register", auth, admin, validData, role.registerRole);
+router.post("/register", role.registerRole);
 router.get("/list/:name?", auth, admin, role.roleList);
 router.get("/find/:_id", auth, admin, validId, role.getRoleById);
 router.put("/update", auth, admin, validData, role.updateRole);

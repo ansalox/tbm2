@@ -1,10 +1,18 @@
-const doNotChanges = async (req) => {
+import Role from "../models/role.js";
+
+const isChanges = async (data) => {
   let change = false;
-  const changes = await Role.findOne({
-    name: req.name,
-    description: req.description,
+  const getRole = await Role.findOne({
+    name: data.name,
+    description: data.description,
   });
-  return changes ? change : (change = true);
+  return getRole ? change : (change = true);
 };
 
-export default doNotChanges;
+const existingRole = async (data) => {
+  let existing = false;
+  const getRole = await Role.findOne({ name: data.name });
+  return getRole ? existing : (existing = false);
+};
+
+export default { isChanges, existingRole };

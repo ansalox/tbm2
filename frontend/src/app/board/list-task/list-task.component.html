@@ -36,6 +36,7 @@
           <button
             class="btnTodo"
             mat-raised-button
+            *ngIf="task.taskStatus != 'to-do'"
             (click)="updateTask(task, 'to-do')"
           >
             To-do

@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import db from "./config/db.js";
+import db from "./config/dbConnection.js";
 import dotenv from "dotenv";
 import role from "./routes/role.js";
 import user from "./routes/user.js";
@@ -16,7 +16,7 @@ app.use("/api/user", user);
 app.use("/api/task", task);
 
 app.listen(process.env.PORT, () =>
-  console.log("Backend server running on port: " + process.env.PORT)
+  console.log("App succesfull running on port: " + process.env.PORT)
 );
 
 db.dbConnection();
